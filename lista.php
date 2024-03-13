@@ -20,6 +20,7 @@
                     </thead>
                     <tbody>
                         <?php
+                        $empty = false;
                         $fileHandle = fopen("voti.csv", "r");
                         if (filesize("voti.csv") > 0) {
                             while (!feof($fileHandle)) {

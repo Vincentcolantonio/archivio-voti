@@ -9,13 +9,17 @@
 <body class="bg-light-subtle">
     <?php 
     $nomeErr = false;
+    $matErr = false;
     $votoErr = false;
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $nome = $_POST["nomeAlunno"];
         $materia = $_POST["materia"];
         $voto = intval($_POST["voto"]);
+        //Verifica che i dati siano validi, ripetuto anche il controllo del voto dato che gli attributi min e max dell'html possono essere bipassati
         if (strlen($nome) >= 30 || str_contains($nome, ";")) {
             $nomeErr = true;
+        }else if ($materia === "CAMBIAMI") {
+            $matErr = true;
         } else if ($voto > 10 || $voto < 1) {
             $votoErr = true;
         } else {
@@ -27,7 +31,7 @@
         }
     }
     ?>
-    <div class="container w-50 h-50">
+    <div class="container w-50">
         <div class="row">
             <div class="col gy-5">
                 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" class="row g-3">
@@ -36,7 +40,8 @@
                     <span class="text-danger"><?php if ($nomeErr) echo "Immetti un nome valido"; else echo "";?></span>
                     <div class="col">
                         <label for="materia" class="form-label">Materia</label>
-                        <select name="materia" id="materia" class="form-control">
+                        <select name="materia" id="materia" class="form-control text-center" required>
+                            <option value="CAMBIAMI">Seleziona Materia</option>
                             <option value="TPSIT">TPSIT</option>
                             <option value="Sistemi e Reti">Sistemi e Reti</option>
                             <option value="Informatica">Informatica</option>
@@ -46,11 +51,12 @@
                             <option value="Scienze Motorie">Scienze Motorie</option>
                             <option value="Inglese">Inglese</option>
                         </select>
+                        <span class="text-danger"><?php if ($matErr) echo "Seleziona una materia"; else echo "";?></span>
                     </div>
                     <div class="col">
                         <label for="voto" class="form-label">Voto</label>
-                        <input class="form-control" type="number" name="voto" id="voto" required/>
-                        <span class="text-danger"><?php if ($votoErr) echo "Seleziona un voto"; else echo ""; ?></span>
+                        <input class="form-control" type="number" name="voto" id="voto" min="1" max="10" required/>
+                        <span class="text-danger"><?php if ($votoErr) echo "Immetti un voto valido"; else echo ""; ?></span>
                     </div>
                     <button class="btn btn-primary" type="submit">SALVA</button>
                 </form>
